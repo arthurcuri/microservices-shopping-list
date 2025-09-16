@@ -4,7 +4,7 @@
     "host": "localhost",
     "port": 3003,
     "registeredAt": 1757988196277,
-    "lastHealthCheck": 1757989456243,
+    "lastHealthCheck": 1758050006990,
     "healthy": true,
     "pid": 26210
   },
@@ -12,9 +12,9 @@
     "url": "http://localhost:3003",
     "host": "localhost",
     "port": 3003,
-    "registeredAt": 1757989448225,
-    "lastHealthCheck": 1757989456247,
+    "registeredAt": 1758049961969,
+    "lastHealthCheck": 1758050021987,
     "healthy": true,
-    "pid": 36240
+    "pid": 76908
   }
 }

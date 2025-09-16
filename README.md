@@ -172,7 +172,7 @@ Professores: Artur Mol, Cleiton Tavares, Cristiano Neto
 
 ## Referências
 
-- [Roteiro da Atividade](../Tarefa%20-%20Roteiro%2003.md)
+- [Roteiro da Atividade](Tarefa%20-%20Roteiro%2003.md)
 - [Documentação Node.js](https://nodejs.org/)
 - [Express.js](https://expressjs.com/)
 - [JWT](https://jwt.io/)

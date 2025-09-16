@@ -10,5 +10,132 @@
     "status": "active",
     "createdAt": "2025-09-16T01:42:24.730Z",
     "updatedAt": "2025-09-16T01:42:24.731Z"
+  },
+  {
+    "id": "003db9b0-bd26-4a84-b6c1-b98b0e16b531",
+    "email": "test@test.com",
+    "username": "testuser",
+    "password": "$2a$12$DmTNxFcc1mwRlJiOExwkQeVE7YUn73prfx.vLBP2DpdU9WQPxfjY.",
+    "firstName": "Test",
+    "lastName": "User",
+    "role": "user",
+    "status": "active",
+    "profile": {
+      "bio": null,
+      "avatar": null,
+      "preferences": {
+        "theme": "light",
+        "language": "pt-BR"
+      }
+    },
+    "metadata": {
+      "registrationDate": "2025-09-16T19:11:51.724Z",
+      "lastLogin": null,
+      "loginCount": 0
+    },
+    "createdAt": "2025-09-16T19:11:51.725Z",
+    "updatedAt": "2025-09-16T19:11:51.725Z"
+  },
+  {
+    "id": "c492552c-e334-4fa8-bbf5-af68ac9f1c1e",
+    "email": "individual@test.com",
+    "username": "individual",
+    "password": "$2a$12$.XE6ddHl1YH/8qs.FWGK5uiNCK//Sgjjx9E/LAC9Id8VImgQ0V5Ly",
+    "firstName": "Individual",
+    "lastName": "Test",
+    "role": "user",
+    "status": "active",
+    "profile": {
+      "bio": null,
+      "avatar": null,
+      "preferences": {
+        "theme": "light",
+        "language": "pt-BR"
+      }
+    },
+    "metadata": {
+      "registrationDate": "2025-09-16T19:14:16.539Z",
+      "lastLogin": null,
+      "loginCount": 0
+    },
+    "createdAt": "2025-09-16T19:14:16.539Z",
+    "updatedAt": "2025-09-16T19:14:16.539Z"
+  },
+  {
+    "id": "f0f35eec-91e8-4a41-9f5c-c3986a1c5e4f",
+    "email": "usuario@test.com",
+    "username": "usuarioteste",
+    "password": "$2a$12$eJKcWZSglkPGnmNkBI/KEOe9BvTpowmLM70eZYMYXDQNNmk0Hc5IG",
+    "firstName": "Usuario",
+    "lastName": "Teste",
+    "role": "user",
+    "status": "active",
+    "profile": {
+      "bio": null,
+      "avatar": null,
+      "preferences": {
+        "theme": "light",
+        "language": "pt-BR"
+      }
+    },
+    "metadata": {
+      "registrationDate": "2025-09-16T19:14:45.100Z",
+      "lastLogin": null,
+      "loginCount": 0
+    },
+    "createdAt": "2025-09-16T19:14:45.100Z",
+    "updatedAt": "2025-09-16T19:14:45.100Z"
+  },
+  {
+    "id": "657f382b-024f-4175-b4cc-9fd968bbf6db",
+    "email": "teste@exemplo.com",
+    "username": "testeusuario",
+    "password": "$2a$12$E5Oi.x5vjgj6xL6Um9Ua3eZYgQ4nBUVq9sgDZBlT4ESLor.OoaFO.",
+    "firstName": "Usuario Atualizado",
+    "lastName": "Teste Atualizado",
+    "role": "user",
+    "status": "active",
+    "profile": {
+      "bio": null,
+      "avatar": null,
+      "preferences": {
+        "theme": "light",
+        "language": "pt-BR"
+      }
+    },
+    "metadata": {
+      "registrationDate": "2025-09-16T19:18:28.386Z",
+      "lastLogin": null,
+      "loginCount": 0
+    },
+    "createdAt": "2025-09-16T19:18:28.386Z",
+    "updatedAt": "2025-09-16T19:31:32.662Z",
+    "metadata.lastLogin": "2025-09-16T19:30:19.876Z",
+    "metadata.loginCount": 1
+  },
+  {
+    "id": "bc68ac80-6e61-468d-9ca1-43dcc0f55df4",
+    "email": "usuario1@test.com",
+    "username": "usuario1teste",
+    "password": "$2a$12$bK..Iw6sw7Cn9aOo4ZacwuwPL24VsLGWLmmcgxjNn52FSPHsrd6qi",
+    "firstName": "Usuario",
+    "lastName": "Teste",
+    "role": "user",
+    "status": "active",
+    "profile": {
+      "bio": null,
+      "avatar": null,
+      "preferences": {
+        "theme": "light",
+        "language": "pt-BR"
+      }
+    },
+    "metadata": {
+      "registrationDate": "2025-09-16T19:30:13.972Z",
+      "lastLogin": null,
+      "loginCount": 0
+    },
+    "createdAt": "2025-09-16T19:30:13.972Z",
+    "updatedAt": "2025-09-16T19:30:13.972Z"
   }
 ]

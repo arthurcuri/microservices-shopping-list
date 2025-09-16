@@ -275,12 +275,11 @@ class UserService {
                 });
             }
 
-            const user = await this.usersDb.findOne({
-                $or: [
-                    { email: identifier.toLowerCase() },
-                    { username: identifier.toLowerCase() }
-                ]
-            });
+            // Buscar por email ou username (já que $or não é suportado)
+            let user = await this.usersDb.findOne({ email: identifier.toLowerCase() });
+            if (!user) {
+                user = await this.usersDb.findOne({ username: identifier.toLowerCase() });
+            }
 
             if (!user || !await bcrypt.compare(password, user.password)) {
                 return res.status(401).json({
