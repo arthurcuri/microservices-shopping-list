@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 // scripts/clear-all-data.js
 const path = require('path');
-const DataLoaders = require('../shared/dataLoaders');
 
 async function main() {
     console.log('=== Limpeza de Dados - Todos os Serviços ===');
