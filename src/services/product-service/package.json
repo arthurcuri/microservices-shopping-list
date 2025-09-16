@@ -40,14 +40,15 @@
   },
   "nodemonConfig": {
     "watch": [
-      "server.js",
-      "../../shared/"
+      "server.js"
     ],
-    "ext": "js,json",
+    "ext": "js",
     "ignore": [
       "database/",
-      "node_modules/"
-    ]
+      "node_modules/",
+      "../../shared/services-registry.json"
+    ],
+    "delay": 1000
   },
   "environment": {
     "PORT": 3003,

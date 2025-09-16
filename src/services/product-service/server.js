@@ -188,8 +188,13 @@ class ItemService {
             
             const skip = (page - 1) * parseInt(limit);
             
-            // Filtros NoSQL flexíveis
-            const filter = { active: active === 'true' };
+            // Filtros NoSQL flexíveis - corrigir conversão de boolean
+            const filter = {};
+            
+            // Filtro de active (converter string para boolean)
+            if (active !== undefined) {
+                filter.active = active === 'true' || active === true;
+            }
 
             // Filtrar por categoria
             if (category) {

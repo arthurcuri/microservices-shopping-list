@@ -5,6 +5,7 @@ const JsonDatabase = require('../../shared/JsonDatabase');
 const serviceRegistry = require('../../shared/serviceRegistry');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const axios = require('axios');
 
 const PORT = 3002;
 const SERVICE_NAME = 'list-service';
@@ -18,20 +19,41 @@ app.use(bodyParser.json());
 // Banco de dados
 const db = new JsonDatabase(DB_DIR, COLLECTION);
 
-// Middleware de autenticação JWT
-function authenticateJWT(req, res, next) {
-    const authHeader = req.headers.authorization;
-    if (authHeader) {
-        const token = authHeader.split(' ')[1];
-        jwt.verify(token, process.env.JWT_SECRET || 'segredo', (err, user) => {
-            if (err) {
-                return res.sendStatus(403);
-            }
-            req.user = user;
-            next();
+// Middleware de autenticação que usa o User Service
+async function authenticateJWT(req, res, next) {
+    const authHeader = req.header('Authorization');
+    
+    if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({
+            success: false,
+            message: 'Token obrigatório'
         });
-    } else {
-        res.sendStatus(401);
+    }
+
+    try {
+        // Descobrir User Service
+        const userService = serviceRegistry.discover('user-service');
+        
+        // Validar token com User Service
+        const response = await axios.post(`${userService.url}/auth/validate`, {
+            token: authHeader.replace('Bearer ', '')
+        }, { timeout: 5000 });
+
+        if (response.data.success) {
+            req.user = response.data.data.user;
+            next();
+        } else {
+            res.status(401).json({
+                success: false,
+                message: 'Token inválido'
+            });
+        }
+    } catch (error) {
+        console.error('Erro na validação do token:', error.message);
+        res.status(503).json({
+            success: false,
+            message: 'Serviço de autenticação indisponível'
+        });
     }
 }
 
@@ -131,13 +153,40 @@ app.post('/lists/:id/items', authenticateJWT, async (req, res) => {
             return res.sendStatus(404);
         }
         
-        const { itemId, itemName, quantity, unit, estimatedPrice, notes } = req.body;
+        const { itemId, quantity, estimatedPrice, notes } = req.body;
+        
+        // Buscar informações completas do item no Product Service
+        let itemDetails = null;
+        try {
+            const productService = serviceRegistry.discover('item-service');
+            const response = await axios.get(`${productService.url}/items/${itemId}`, { timeout: 5000 });
+            
+            if (response.data.success) {
+                itemDetails = response.data.data;
+            }
+        } catch (error) {
+            console.error('Erro ao buscar detalhes do item:', error.message);
+            return res.status(404).json({ 
+                success: false,
+                error: 'Item não encontrado no catálogo' 
+            });
+        }
+        
+        // Criar item da lista com informações completas
         const item = {
-            itemId,
-            itemName,
-            quantity,
-            unit,
-            estimatedPrice,
+            itemId: itemDetails.id,
+            itemName: itemDetails.name,
+            itemDetails: {
+                category: itemDetails.category,
+                brand: itemDetails.brand,
+                unit: itemDetails.unit,
+                barcode: itemDetails.barcode,
+                description: itemDetails.description,
+                averagePrice: itemDetails.averagePrice
+            },
+            quantity: quantity || 1,
+            unit: itemDetails.unit,
+            estimatedPrice: estimatedPrice || itemDetails.averagePrice,
             purchased: false,
             notes: notes || '',
             addedAt: new Date().toISOString()
@@ -148,10 +197,17 @@ app.post('/lists/:id/items', authenticateJWT, async (req, res) => {
         list.summary.estimatedTotal = list.items.reduce((sum, i) => sum + (i.estimatedPrice || 0), 0);
         
         await db.update(list.id, list);
-        res.status(201).json(item);
+        res.status(201).json({
+            success: true,
+            message: 'Item adicionado à lista com sucesso',
+            data: item
+        });
     } catch (error) {
         console.error('Erro ao adicionar item à lista:', error);
-        res.status(500).json({ error: 'Erro interno do servidor' });
+        res.status(500).json({ 
+            success: false,
+            error: 'Erro interno do servidor' 
+        });
     }
 });
 
@@ -216,6 +272,45 @@ app.get('/lists/:id/summary', authenticateJWT, async (req, res) => {
         console.error('Erro ao buscar resumo da lista:', error);
         res.status(500).json({ error: 'Erro interno do servidor' });
     }
+});
+
+// Service info endpoint
+app.get('/', (req, res) => {
+    res.json({
+        service: 'List Service',
+        version: '1.0.0',
+        description: 'Microsserviço para gerenciamento de listas de compras com integração ao catálogo de produtos',
+        database: 'JSON-NoSQL',
+        integrations: [
+            'User Service (autenticação)',
+            'Product/Item Service (catálogo de produtos)'
+        ],
+        endpoints: [
+            'GET /lists - Listar listas do usuário',
+            'GET /lists/:id - Obter lista específica',
+            'POST /lists - Criar nova lista',
+            'PUT /lists/:id - Atualizar lista',
+            'DELETE /lists/:id - Deletar lista',
+            'POST /lists/:id/items - Adicionar item à lista (busca automática no catálogo)',
+            'PUT /lists/:id/items/:itemId - Atualizar item na lista',
+            'DELETE /lists/:id/items/:itemId - Remover item da lista',
+            'GET /lists/:id/summary - Obter resumo da lista',
+            'GET /health - Health check'
+        ],
+        authentication: 'JWT Token required for all endpoints except /, /health',
+        usage: {
+            addItem: {
+                endpoint: 'POST /lists/:id/items',
+                payload: {
+                    itemId: 'string (UUID do produto no catálogo)',
+                    quantity: 'number (opcional, padrão: 1)',
+                    estimatedPrice: 'number (opcional, usa preço médio do catálogo)',
+                    notes: 'string (opcional)'
+                },
+                description: 'Busca automaticamente informações do produto no catálogo'
+            }
+        }
+    });
 });
 
 // Health check
