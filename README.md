@@ -12,9 +12,8 @@
 
 ## 🎬 Demonstração em Vídeo
 
-<video src="record.mp4" controls width="700" poster="https://www.pucminas.br/institucional/PublishingImages/Paginas/brasao/brasao-pucminas-versao-2025.png">
-  Seu navegador não suporta vídeo incorporado. <a href="record.mp4">Baixe o vídeo</a>.
-</video>
+![Demonstração](record.gif)
+
 
 ---
 
