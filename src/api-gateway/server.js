@@ -133,6 +133,12 @@ class APIGateway {
             this.proxyRequest('list-service', req, res, next);
         });
 
+        // Debug route - teste direto
+        this.app.post('/api/debug', (req, res, next) => {
+            console.log(`🔗 DEBUG: Roteando para product-service: ${req.method} ${req.originalUrl}`);
+            this.proxyRequest('product-service', req, res, next);
+        });
+
         // Endpoints agregados
         this.app.get('/api/dashboard', this.getDashboard.bind(this));
         this.app.get('/api/search', this.globalSearch.bind(this));
@@ -172,26 +178,37 @@ class APIGateway {
         try {
             console.log(`🔄 Proxy request: ${req.method} ${req.originalUrl} -> ${serviceName}`);
             
-            // Verificar circuit breaker
+            // Verificar circuit breaker PRIMEIRO
+            console.log(`🔍 Verificando circuit breaker para ${serviceName}...`);
             if (this.isCircuitOpen(serviceName)) {
-                console.log(`⚡ Circuit breaker open for ${serviceName}`);
+                console.log(`⚡⚡⚡ CIRCUIT BREAKER ABERTO para ${serviceName} ⚡⚡⚡`);
                 return res.status(503).json({
                     success: false,
-                    message: `Serviço ${serviceName} temporariamente indisponível`,
-                    service: serviceName
+                    message: `Serviço ${serviceName} temporariamente indisponível (Circuit Breaker)`,
+                    service: serviceName,
+                    circuitBreakerOpen: true
                 });
+            } else {
+                console.log(`✅ Circuit breaker fechado para ${serviceName}`);
             }
 
             // Descobrir serviço com debug
             let service;
             try {
+                console.log(`🔍 Tentando descobrir serviço: ${serviceName}`);
                 service = serviceRegistry.discover(serviceName);
+                console.log(`✅ Serviço descoberto com sucesso:`, service);
             } catch (error) {
                 console.error(`❌ Erro na descoberta do serviço ${serviceName}:`, error.message);
+                
+                // REGISTRAR FALHA DE SERVICE DISCOVERY NO CIRCUIT BREAKER
+                console.log(`🚨 Service Discovery falhou - registrando no Circuit Breaker`);
+                this.recordFailure(serviceName);
                 
                 // Debug: listar serviços disponíveis
                 const availableServices = serviceRegistry.listServices();
                 console.log(`📋 Serviços disponíveis:`, Object.keys(availableServices));
+                console.log(`📋 Registry completo:`, availableServices);
                 
                 return res.status(503).json({
                     success: false,
@@ -204,6 +221,8 @@ class APIGateway {
             // Construir URL de destino corrigida
             const originalPath = req.originalUrl;
             let targetPath = '';
+            
+            console.log(`🗺️  Mapeando rota: ${originalPath} (serviço: ${serviceName})`);
             
             // Extrair o path correto baseado no serviço
             if (serviceName === 'user-service') {
@@ -227,18 +246,22 @@ class APIGateway {
                 // /api/items -> /items
                 // /api/products -> /products
                 // /api/items/123 -> /items/123
-                if (originalPath.startsWith('/api/items/')) {
+                if (originalPath.startsWith('/api/items')) {
                     targetPath = originalPath.replace('/api/items', '/items');
+                } else if (originalPath.startsWith('/api/products')) {
+                    targetPath = originalPath.replace('/api/products', '/products');
+                } else if (originalPath.startsWith('/api/debug')) {
+                    targetPath = originalPath.replace('/api/debug', '/debug');
                 } else {
-                    targetPath = originalPath.replace('/api/products', '');
-                    if (!targetPath.startsWith('/')) {
-                        targetPath = '/' + targetPath;
-                    }
-                    // Se path vazio, usar /products
-                    if (targetPath === '/' || targetPath === '') {
-                        targetPath = '/products';
-                    }
+                    targetPath = originalPath.replace('/api/', '/');
                 }
+                
+                // Se path vazio após replacement, usar default
+                if (targetPath === '/' || targetPath === '') {
+                    targetPath = '/items';
+                }
+                
+                console.log(`🎯 Rota mapeada: ${originalPath} -> ${targetPath}`);
             } else if (serviceName === 'list-service') {
                 // /api/lists -> /lists
                 // /api/lists/123 -> /lists/123
@@ -296,8 +319,10 @@ class APIGateway {
             res.status(response.status).json(response.data);
 
         } catch (error) {
-            // Registrar falha
+            // Registrar falha COM LOGS EXPLÍCITOS
+            console.log(`🚨 REGISTRANDO FALHA NO CIRCUIT BREAKER para ${serviceName}`);
             this.recordFailure(serviceName);
+            console.log(`📊 Circuit Breaker Status:`, this.circuitBreakers.get(serviceName));
             
             console.error(`❌ Proxy error for ${serviceName}:`, {
                 message: error.message,
@@ -356,11 +381,13 @@ class APIGateway {
         breaker.failures++;
         breaker.lastFailure = Date.now();
 
+        console.log(`📈 FALHA ${breaker.failures}/3 registrada para ${serviceName}`);
+
         // Abrir circuito após 3 falhas
         if (breaker.failures >= 3) {
             breaker.isOpen = true;
             breaker.isHalfOpen = false;
-            console.log(`Circuit breaker opened for ${serviceName}`);
+            console.log(`🔴🔴🔴 CIRCUIT BREAKER ABERTO para ${serviceName} após ${breaker.failures} falhas! 🔴🔴🔴`);
         }
 
         this.circuitBreakers.set(serviceName, breaker);

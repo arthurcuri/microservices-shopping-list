@@ -1,1 +1,11 @@
-{}
+{
+  "product-service": {
+    "url": "http://localhost:3003",
+    "host": "localhost",
+    "port": 3003,
+    "registeredAt": 1758076944674,
+    "lastHealthCheck": 1758077037664,
+    "healthy": true,
+    "pid": 161307
+  }
+}

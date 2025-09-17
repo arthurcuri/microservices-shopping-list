@@ -56,9 +56,13 @@ class FileBasedServiceRegistry {
 
     // Descobrir um serviço
     discover(serviceName) {
+        // FORÇAR RELOAD DO REGISTRY - FIX TEMPORÁRIO
+        this.services = null;
+        
         const services = this.readRegistry();
         console.log(`Procurando serviço: ${serviceName}`);
         console.log(`Serviços disponíveis: ${Object.keys(services).join(', ')}`);
+        console.log(`Registry completo:`, JSON.stringify(services, null, 2));
         
         const service = services[serviceName];
         if (!service) {

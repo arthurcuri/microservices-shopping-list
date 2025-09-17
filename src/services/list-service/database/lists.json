@@ -1,1 +1,31 @@
-[]
+[
+  {
+    "id": "2ef12188-0523-4617-b37d-0425fd4fd174",
+    "userId": "c1e7dfcb-0e76-4580-a7e4-f35236f5f89a",
+    "name": "Lista Teste Comidas Teste gravado",
+    "description": "Lista de teste",
+    "status": "active",
+    "items": [
+      {
+        "itemId": "dddb411f-9821-4000-929e-8794156f911d",
+        "itemName": "LAsanha",
+        "itemDetails": {
+          "category": "massas",
+          "description": "Lasanha de PDP"
+        },
+        "quantity": 1,
+        "estimatedPrice": 5.99,
+        "purchased": false,
+        "notes": "Preferir marca da sadia",
+        "addedAt": "2025-09-17T02:18:21.441Z"
+      }
+    ],
+    "summary": {
+      "totalItems": 1,
+      "purchasedItems": 0,
+      "estimatedTotal": 5.99
+    },
+    "createdAt": "2025-09-17T02:18:00.784Z",
+    "updatedAt": "2025-09-17T02:18:21.443Z"
+  }
+]

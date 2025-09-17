@@ -1,1 +1,83 @@
-[]
+[
+  {
+    "id": "c1e7dfcb-0e76-4580-a7e4-f35236f5f89a",
+    "email": "cleiton@gmail.com",
+    "username": "cleiton",
+    "password": "$2a$12$11rbcBc2XUogIZEM6grm/upXk0c8pUsGTxNDL/i7saXr0dI1bIc82",
+    "firstName": "Cleiton",
+    "lastName": "Teste",
+    "role": "user",
+    "status": "active",
+    "profile": {
+      "bio": null,
+      "avatar": null,
+      "preferences": {
+        "theme": "light",
+        "language": "pt-BR"
+      }
+    },
+    "metadata": {
+      "registrationDate": "2025-09-17T02:16:10.693Z",
+      "lastLogin": null,
+      "loginCount": 0
+    },
+    "createdAt": "2025-09-17T02:16:10.694Z",
+    "updatedAt": "2025-09-17T02:16:38.812Z",
+    "metadata.lastLogin": "2025-09-17T02:16:38.811Z",
+    "metadata.loginCount": 1
+  },
+  {
+    "id": "b225cf87-874c-4a67-827b-d2d9e6b27df1",
+    "email": "arthur1curi@gmail.com",
+    "username": "arthur",
+    "password": "$2a$12$5NG9TbDTEgSwAAwT9PGYF.bXEZDxw20rWu5Cg8Azz3NgCNIWBYt6S",
+    "firstName": "arthur",
+    "lastName": "arthur",
+    "role": "user",
+    "status": "active",
+    "profile": {
+      "bio": null,
+      "avatar": null,
+      "preferences": {
+        "theme": "light",
+        "language": "pt-BR"
+      }
+    },
+    "metadata": {
+      "registrationDate": "2025-09-17T02:37:07.088Z",
+      "lastLogin": null,
+      "loginCount": 0
+    },
+    "createdAt": "2025-09-17T02:37:07.088Z",
+    "updatedAt": "2025-09-17T02:37:14.770Z",
+    "metadata.lastLogin": "2025-09-17T02:37:14.769Z",
+    "metadata.loginCount": 1
+  },
+  {
+    "id": "88181fd8-f90e-4726-8e63-9dd842f154aa",
+    "email": "arthur",
+    "username": "3",
+    "password": "$2a$12$MxItxNinhHUGiuT61DMqCew4QH7i0KFIJ44IoYtr0YiNTt3O7OLLi",
+    "firstName": "3",
+    "lastName": "3",
+    "role": "user",
+    "status": "active",
+    "profile": {
+      "bio": null,
+      "avatar": null,
+      "preferences": {
+        "theme": "light",
+        "language": "pt-BR"
+      }
+    },
+    "metadata": {
+      "registrationDate": "2025-09-17T02:38:40.089Z",
+      "lastLogin": null,
+      "loginCount": 0
+    },
+    "createdAt": "2025-09-17T02:38:40.090Z",
+    "updatedAt": "2025-09-17T02:43:42.311Z",
+    "metadata.lastLogin": "2025-09-17T02:43:42.311Z",
+    "metadata.loginCount": 1
+  }
+]

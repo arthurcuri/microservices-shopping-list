@@ -1,1 +1,40 @@
-[]
+[
+  {
+    "id": "8880b225-b584-417d-bd49-b297a41a075c",
+    "name": "Iogurte",
+    "description": "Iogurte Integral",
+    "price": 4.5,
+    "stock": 0,
+    "category": "laticínios",
+    "images": [],
+    "tags": [],
+    "specifications": {},
+    "active": true,
+    "featured": false,
+    "metadata": {
+      "createdBy": "c1e7dfcb-0e76-4580-a7e4-f35236f5f89a",
+      "createdByName": "Cleiton Teste"
+    },
+    "createdAt": "2025-09-17T02:17:07.495Z",
+    "updatedAt": "2025-09-17T02:17:07.495Z"
+  },
+  {
+    "id": "dddb411f-9821-4000-929e-8794156f911d",
+    "name": "LAsanha",
+    "description": "Lasanha de PDP",
+    "price": 4.5,
+    "stock": 0,
+    "category": "massas",
+    "images": [],
+    "tags": [],
+    "specifications": {},
+    "active": true,
+    "featured": false,
+    "metadata": {
+      "createdBy": "c1e7dfcb-0e76-4580-a7e4-f35236f5f89a",
+      "createdByName": "Cleiton Teste"
+    },
+    "createdAt": "2025-09-17T02:17:23.445Z",
+    "updatedAt": "2025-09-17T02:17:23.445Z"
+  }
+]

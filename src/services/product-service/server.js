@@ -14,7 +14,7 @@ class ItemService {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || 3003;
-        this.serviceName = 'item-service';
+        this.serviceName = 'product-service';
         this.serviceUrl = `http://127.0.0.1:${this.port}`;
         
         this.setupDatabase();
@@ -49,9 +49,7 @@ class ItemService {
         // Health check
         this.app.get('/health', async (req, res) => {
             try {
-                const itemCount = await this.itemsDb.count();
-                const activeItems = await this.itemsDb.count({ active: true });
-                
+                const count = await this.itemsDb.count();
                 res.json({
                     service: this.serviceName,
                     status: 'healthy',
@@ -60,17 +58,28 @@ class ItemService {
                     version: '1.0.0',
                     database: {
                         type: 'JSON-NoSQL',
-                        itemCount: itemCount,
-                        activeItems: activeItems
+                        records: count,
+                        status: 'connected'
                     }
                 });
             } catch (error) {
-                res.status(503).json({
+                res.status(500).json({
                     service: this.serviceName,
                     status: 'unhealthy',
                     error: error.message
                 });
             }
+        });
+
+        // Debug route - teste simples
+        this.app.post('/debug', (req, res) => {
+            console.log('🔥 DEBUG ROUTE CHAMADA!', req.body);
+            res.json({
+                success: true,
+                message: 'Debug route funcionando!',
+                receivedBody: req.body,
+                headers: req.headers
+            });
         });
 
         // Service info
@@ -147,13 +156,25 @@ class ItemService {
 
         try {
             // Descobrir User Service
+            console.log('Procurando serviço: user-service');
             const userService = serviceRegistry.discover('user-service');
+            console.log('Serviço encontrado:', userService);
+            
+            if (!userService) {
+                return res.status(503).json({
+                    success: false,
+                    message: 'Serviço de autenticação indisponível'
+                });
+            }
             
             // Validar token com User Service
+            console.log(`Enviando token para validação: ${userService.url}/auth/validate`);
             const response = await axios.post(`${userService.url}/auth/validate`, {
                 token: authHeader.replace('Bearer ', '')
             }, { timeout: 5000 });
 
+            console.log('Resposta da validação:', response.data);
+            
             if (response.data.success) {
                 req.user = response.data.data.user;
                 next();
@@ -625,11 +646,11 @@ if (require.main === module) {
 
     // Graceful shutdown
     process.on('SIGTERM', () => {
-        serviceRegistry.unregister('item-service');
+        serviceRegistry.unregister('product-service');
         process.exit(0);
     });
     process.on('SIGINT', () => {
-        serviceRegistry.unregister('item-service');
+        serviceRegistry.unregister('product-service');
         process.exit(0);
     });
 }

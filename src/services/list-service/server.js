@@ -158,8 +158,17 @@ app.post('/lists/:id/items', authenticateJWT, async (req, res) => {
         // Buscar informações completas do item no Product Service
         let itemDetails = null;
         try {
-            const productService = serviceRegistry.discover('item-service');
-            const response = await axios.get(`${productService.url}/items/${itemId}`, { timeout: 5000 });
+            console.log('🔍 Tentando descobrir product-service...');
+            // FORÇAR RELOAD DO REGISTRY - FIX TEMPORÁRIO
+            serviceRegistry.services = null;
+            const productService = serviceRegistry.discover('product-service');
+            console.log('✅ Product service encontrado:', productService);
+            
+            const itemUrl = `${productService.url}/items/${itemId}`;
+            console.log('📤 Buscando item na URL:', itemUrl);
+            
+            const response = await axios.get(itemUrl, { timeout: 5000 });
+            console.log('📥 Resposta recebida:', response.data);
             
             if (response.data.success) {
                 itemDetails = response.data.data;
@@ -314,9 +323,28 @@ app.get('/', (req, res) => {
 });
 
 // Health check
-app.get('/health', (req, res) => {
-    res.json({ status: 'ok', service: SERVICE_NAME });
-});
+        app.get('/health', (req, res) => {
+            res.json({ status: 'ok', service: 'list-service' });
+        });
+
+        // Debug endpoint para testar service discovery
+        app.get('/debug/product-service', (req, res) => {
+            try {
+                serviceRegistry.services = null; // Force reload
+                const productService = serviceRegistry.discover('product-service');
+                res.json({
+                    success: true,
+                    productService: productService,
+                    message: 'Product service encontrado com sucesso'
+                });
+            } catch (error) {
+                res.status(500).json({
+                    success: false,
+                    error: error.message,
+                    availableServices: Object.keys(serviceRegistry.listServices())
+                });
+            }
+        });
 
 app.listen(PORT, () => {
     console.log(`${SERVICE_NAME} running on port ${PORT}`);
