@@ -10,7 +10,7 @@
 
 ---
 
-## 🎬 Demonstração em Vídeo
+## 🎬 Demonstração em Vídeo (melhor baixar o mp4 rs)
 
 ![Demonstração](record.gif)
 
